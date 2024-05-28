@@ -1,19 +1,19 @@
-const url = require("url");
-const path = require("path");
-const fs = require("fs");
+import { parse } from "url";
+import { join } from "path";
+import { readFileSync, writeFileSync } from "fs";
 
 // Query string
 
 //  to get users on basis of query params and if no query param then show all users
-function getUsers(req, res) {
+export function getUsers(req, res) {
   console.log("Inside GET");
 
-  const filePath = path.join(__dirname, "userData.json");
-  const parsedUrl = url.parse(req.url, true);
+  const filePath = join(__dirname, "userData.json");
+  const parsedUrl = parse(req.url, true);
   const { id } = parsedUrl.query;
 
   try {
-    const data = fs.readFileSync(filePath, "utf8");
+    const data = readFileSync(filePath, "utf8");
     const jsonData = JSON.parse(data);
     console.log(jsonData);
 
@@ -38,9 +38,9 @@ function getUsers(req, res) {
 }
 
 // To create a new User
-function createUser(req, parsedBody, res) {
+export function createUser(req, parsedBody, res) {
   console.log("Inside POST");
-  const filePath = path.join(__dirname, "userData.json");
+  const filePath = join(__dirname, "userData.json");
 
   const objToSaveToDb = {
     id: Date.now(),
@@ -60,7 +60,7 @@ function createUser(req, parsedBody, res) {
     return;
   }
 
-  const usersArr = fs.readFileSync(filePath, "utf-8");
+  const usersArr = readFileSync(filePath, "utf-8");
   const usersJson = JSON.parse(usersArr);
 
   const user = usersJson.dataArray.find(
@@ -75,19 +75,19 @@ function createUser(req, parsedBody, res) {
   //  push to the array
   usersJson.dataArray.push(objToSaveToDb);
 
-  fs.writeFileSync(filePath, JSON.stringify(usersJson));
+  writeFileSync(filePath, JSON.stringify(usersJson));
 
   res.end(JSON.stringify(objToSaveToDb));
 }
 
 // To delete the user
-function deleteUser(req, res) {
+export function deleteUser(req, res) {
   console.log("Inside DELETE");
-  const filePath = path.join(__dirname, "userData.json");
-  const parsedUrl = url.parse(req.url, true);
+  const filePath = join(__dirname, "userData.json");
+  const parsedUrl = parse(req.url, true);
   const { id } = parsedUrl.query;
 
-  const usersDb = fs.readFileSync(filePath, "utf-8");
+  const usersDb = readFileSync(filePath, "utf-8");
   const usersJson = JSON.parse(usersDb);
 
   const user = usersJson.dataArray.find((data) => data.id === Number(id));
@@ -101,18 +101,18 @@ function deleteUser(req, res) {
     ...usersJson.dataArray.filter((data) => data.id !== Number(id)),
   ];
 
-  fs.writeFileSync(filePath, JSON.stringify(usersJson));
+  writeFileSync(filePath, JSON.stringify(usersJson));
   res.end("User Successfully Deleted!!");
 }
 
 //  To update the user
-function updateUser(req, parsedBody, res) {
+export function updateUser(req, parsedBody, res) {
   console.log("Inside PUT");
 
-  const parsedUrl = url.parse(req.url, true);
+  const parsedUrl = parse(req.url, true);
   const { id } = parsedUrl.query;
 
-  const filePath = path.join(__dirname, "userData.json");
+  const filePath = join(__dirname, "userData.json");
 
   const objToSaveToDb = {
     id: Number(id),
@@ -131,7 +131,7 @@ function updateUser(req, parsedBody, res) {
     res.end("userFields cant be empty");
     return;
   }
-  const usersDb = fs.readFileSync(filePath, "utf-8");
+  const usersDb = readFileSync(filePath, "utf-8");
   const usersJson = JSON.parse(usersDb);
   const user = usersJson.dataArray.find((data) => {
     return data.id === objToSaveToDb.id;
@@ -148,14 +148,8 @@ function updateUser(req, parsedBody, res) {
 
   usersJson.dataArray.push(objToSaveToDb);
 
-  fs.writeFileSync(filePath, JSON.stringify(usersJson));
+  writeFileSync(filePath, JSON.stringify(usersJson));
 
   res.end(JSON.stringify(objToSaveToDb));
 }
 
-module.exports = {
-  getUsers,
-  createUser,
-  deleteUser,
-  updateUser,
-};

@@ -1,9 +1,9 @@
-const crudOperations = require("./crudOperations");
-const http = require("node:http");
-const fs = require("fs");
+import { getUsers, createUser, deleteUser, updateUser } from "./crudOperations.js";
+import { STATUS_CODES, createServer } from "node:http";
 
 // port to listen to.
 const PORT = 8000;
+
 
 // create server callback
 const requestHandler = (req, res) => {
@@ -26,19 +26,19 @@ const requestHandler = (req, res) => {
         req.method === "GET" &&
         (req.url === "/" || req.url.includes("?id="))
       ) {
-        crudOperations.getUsers(req, res);
+        getUsers(req, res);
       } else if (req.method === "POST" && req.url === "/") {
-        crudOperations.createUser(req, parsedBody, res);
+        createUser(req, parsedBody, res);
       } else if (
         req.method === "DELETE" &&
         (req.url === "/" || req.url.includes("?id="))
       ) {
-        crudOperations.deleteUser(req, res);
+        deleteUser(req, res);
       } else if (
         req.method === "PUT" &&
         (req.url === "/" || req.url.includes("?id="))
       ) {
-        crudOperations.updateUser(req, parsedBody, res);
+        updateUser(req, parsedBody, res);
       }
     } catch (error) {
       res.end(JSON.stringify({ error: error }));
@@ -47,7 +47,7 @@ const requestHandler = (req, res) => {
 };
 
 // create a server
-const server = http.createServer(requestHandler);
+const server = createServer(requestHandler);
 
 // listen to the port
 server.listen(PORT, (err) => {
