@@ -1,0 +1,33 @@
+{
+  "nameOfDb": "usersDb",
+  "dataArray": [
+    {
+      "id": 1,
+      "name": "Karandeep Singh",
+      "age": 22,
+      "email": "karandeep.singh@chicmic.co.in",
+      "city": "chandigarh"
+    },
+    {
+      "id": 2,
+      "name": "Dev Sagar",
+      "age": 20,
+      "email": "devsagar@gmail.com",
+      "city": "Delhi"
+    },
+    {
+      "id": 3,
+      "name": "kartik",
+      "age": 19,
+      "email": "kartik.singh@yahoo.in",
+      "city": "Karnal"
+    },
+    {
+      "id": 1716891299454,
+      "name": "karen",
+      "age": 10,
+      "email": "kartik.singh@yahoo.in",
+      "city": "usa"
+    }
+  ]
+}
